@@ -179,7 +179,7 @@ erDiagram
     }
 ```
 
-Ключевые ограничения:
+> [!tip] Ключевые ограничения:
 
 * `users.username` и `users.email` — `UNIQUE`;
 * внешние ключи: `characters.user_id → users` (ON DELETE CASCADE),
