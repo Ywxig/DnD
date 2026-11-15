@@ -1,0 +1,42 @@
+services:
+  # PostgreSQL: схема и тестовые данные накатываются автоматически
+  # при первом создании тома (docker-entrypoint-initdb.d).
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: dnd
+      POSTGRES_USER: dnd
+      POSTGRES_PASSWORD: dnd_pass
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+    ports:
+      - "5433:5432"   # доступ с хоста по localhost:5433
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dnd -d dnd"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Приложение: PHP 8.2 + Apache, DocumentRoot = public/
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_NAME: "D&D Персонажи"
+      APP_DEBUG: "1"
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: dnd
+      DB_USER: dnd
+      DB_PASSWORD: dnd_pass
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:
