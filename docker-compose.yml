@@ -29,6 +29,9 @@ services:
       - "8080:80"
     volumes:
       - .:/var/www/html
+      - vendor:/var/www/html/vendor
+    # Обновляем зависимости при старте: убирает устаревшие пакеты из volume.
+    command: sh -c "composer install --no-interaction --no-progress && apache2-foreground"
     environment:
       APP_NAME: "D&D Персонажи"
       APP_DEBUG: "1"
@@ -43,3 +46,4 @@ services:
 
 volumes:
   db_data:
+  vendor:

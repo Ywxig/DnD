@@ -22,10 +22,4 @@ return [
         'user'     => 'dnd',
         'password' => 'dnd_pass',
     ],
-
-    'password_reset' => [
-        // Куда на время разработки писать ссылки восстановления пароля
-        // (вместо отправки письма).
-        'log_file' => __DIR__ . '/../logs/password_reset.log',
-    ],
 ];

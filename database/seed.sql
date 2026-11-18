@@ -2,14 +2,13 @@
 -- Тестовые данные для приложения «Персонажи D&D»
 -- Выполнять после database/schema.sql
 --
--- Пароли (для входа): admin — admin123, остальные — password123
+-- Пароль тестовых пользователей: password123
 -- ============================================================
 
--- Пользователи: админ и два игрока
-INSERT INTO users (username, email, password_hash, role) VALUES
-('admin',   'admin@example.com',   '$2y$12$YZW0cRSJiSzF8Ws/g6Qki.v1kspWsmGT9cKK20MiMe5rLDAY26Yxe', 'admin'),
-('aragorn', 'aragorn@example.com', '$2y$12$sD9lhLRF/cHkACcqPz5ijevIGKSQp4bk4GDWCxVrB3woBQ5ofmOO.', 'user'),
-('gimli',   'gimli@example.com',   '$2y$12$sD9lhLRF/cHkACcqPz5ijevIGKSQp4bk4GDWCxVrB3woBQ5ofmOO.', 'user');
+-- Два тестовых игрока
+INSERT INTO users (username, email, password_hash) VALUES
+('aragorn', 'aragorn@example.com', '$2y$12$sD9lhLRF/cHkACcqPz5ijevIGKSQp4bk4GDWCxVrB3woBQ5ofmOO.'),
+('gimli',   'gimli@example.com',   '$2y$12$sD9lhLRF/cHkACcqPz5ijevIGKSQp4bk4GDWCxVrB3woBQ5ofmOO.');
 
 -- Расы (6)
 INSERT INTO races (name, description) VALUES
@@ -36,9 +35,9 @@ INSERT INTO characters
     (user_id, race_id, class_id, name, level,
      strength, dexterity, constitution, intelligence, wisdom, charisma,
      alignment, backstory) VALUES
-(2, 1, 1, 'Арагорн', 12, 16, 14, 15, 12, 14, 16, 'Lawful Good',
+(1, 1, 1, 'Арагорн', 12, 16, 14, 15, 12, 14, 16, 'Lawful Good',
  'Следопыт Севера, воспитанный эльфами. Ищет свой путь к трону.'),
-(2, 2, 3, 'Леголас', 10, 12, 18, 12, 14, 16, 14, 'Chaotic Good',
+(1, 2, 3, 'Леголас', 10, 12, 18, 12, 14, 16, 14, 'Chaotic Good',
  'Эльфийский лучник из Лихолесья. Зрение и ловкость на грани возможного.'),
-(3, 3, 2, 'Гимли', 9, 18, 10, 16, 8, 12, 10, 'Lawful Good',
+(2, 3, 2, 'Гимли', 9, 18, 10, 16, 8, 12, 10, 'Lawful Good',
  'Дварф-воин из Одинокой горы. Топор не знает промаха — почти.');

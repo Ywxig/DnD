@@ -13,6 +13,11 @@ define('VIEWS_PATH', BASE_PATH . '/views');
 
 mb_internal_encoding('UTF-8');
 
+// Composer-зависимости (Twig). Классы App\ по-прежнему грузятся своим автозагрузчиком.
+if (is_file(BASE_PATH . '/vendor/autoload.php')) {
+    require BASE_PATH . '/vendor/autoload.php';
+}
+
 // Конфигурация приложения.
 // Приоритет источников:
 //   1) переменные окружения (DB_HOST, DB_PORT, ...) — режим docker;
@@ -37,9 +42,6 @@ function app_config(): array
                     'name'     => 'dnd',
                     'user'     => 'dnd',
                     'password' => 'dnd_pass',
-                ],
-                'password_reset' => [
-                    'log_file' => BASE_PATH . '/logs/password_reset.log',
                 ],
             ];
 

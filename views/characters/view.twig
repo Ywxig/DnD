@@ -1,0 +1,41 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<section class="panel character-card">
+    <div class="panel-head">
+        <h1>{{ character.name }}</h1>
+        <a class="btn btn-secondary" href="{{ url('characters_my') }}">← Мои персонажи</a>
+    </div>
+
+    <dl class="character-meta">
+        <div><dt>Раса</dt><dd>{{ character.race_name }}</dd></div>
+        <div><dt>Класс</dt><dd>{{ character.class_name }}</dd></div>
+        <div><dt>Уровень</dt><dd>{{ character.level }}</dd></div>
+        <div><dt>Мировоззрение</dt><dd>{{ character.alignment }}</dd></div>
+        <div><dt>Игрок</dt><dd>{{ character.owner_name }}</dd></div>
+        <div><dt>Создан</dt><dd>{{ format_date(character.created_at) }}</dd></div>
+    </dl>
+
+    <h2>Характеристики</h2>
+    <table class="stats-table">
+        <thead>
+        <tr><th>Характеристика</th><th>Значение</th><th>Модификатор</th></tr>
+        </thead>
+        <tbody>
+        {% for stat in stats %}
+            <tr>
+                <td>{{ stat_labels[stat] }}</td>
+                <td>{{ character[stat] }}</td>
+                <td><span class="badge">{{ signed_modifier(character[stat]) }}</span></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p class="muted">Модификатор = floor((значение − 10) / 2).</p>
+
+    {% if character.backstory %}
+        <h2>Предыстория</h2>
+        <p class="backstory">{{ character.backstory|nl2br }}</p>
+    {% endif %}
+</section>
+{% endblock %}

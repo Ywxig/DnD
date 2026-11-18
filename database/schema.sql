@@ -3,16 +3,14 @@
 -- СУБД: PostgreSQL
 -- ============================================================
 
-DROP TABLE IF EXISTS password_resets, characters, races, classes, users CASCADE;
+DROP TABLE IF EXISTS characters, races, classes, users CASCADE;
 
--- Пользователи: уникальные username и email, роль (user/admin)
+-- Пользователи: уникальные username и email
 CREATE TABLE users (
     id            BIGSERIAL    PRIMARY KEY,
     username      VARCHAR(50)  NOT NULL UNIQUE,
     email         VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    role          VARCHAR(20)  NOT NULL DEFAULT 'user'
-                  CHECK (role IN ('user', 'admin')),
     created_at    TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 
@@ -49,21 +47,5 @@ CREATE TABLE characters (
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Индексы по внешним ключам и уровню
-CREATE INDEX idx_characters_user_id  ON characters(user_id);
-CREATE INDEX idx_characters_race_id  ON characters(race_id);
-CREATE INDEX idx_characters_class_id ON characters(class_id);
-CREATE INDEX idx_characters_level    ON characters(level);
-CREATE INDEX idx_characters_created  ON characters(created_at);
-
--- Токены восстановления пароля: хранится только SHA-256-хеш токена
-CREATE TABLE password_resets (
-    id         BIGSERIAL   PRIMARY KEY,
-    user_id    BIGINT      NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    token_hash CHAR(64)    NOT NULL UNIQUE,
-    expires_at TIMESTAMPTZ NOT NULL,
-    used       BOOLEAN     NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
-CREATE INDEX idx_password_resets_user_id ON password_resets(user_id);
+-- Индекс по владельцу: выборка «мои персонажи»
+CREATE INDEX idx_characters_user_id ON characters(user_id);

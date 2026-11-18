@@ -14,9 +14,7 @@ use App\Models\User;
  */
 final class AuthController extends Controller
 {
-    /**
-     * Форма входа (GET) и аутентификация (POST).
-     */
+    /** Форма входа (GET) и аутентификация (POST). */
     public function login(): void
     {
         if (!$this->isPost()) {
@@ -54,15 +52,12 @@ final class AuthController extends Controller
         // Защита от фиксации сессии: новый id после входа.
         session_regenerate_id(true);
         $_SESSION['user_id'] = (int)$user['id'];
-        $_SESSION['role']    = (string)$user['role'];
 
         flash('success', 'Вы вошли как ' . $user['username'] . '.');
         $this->redirect('characters_my');
     }
 
-    /**
-     * Форма регистрации (GET) и создание аккаунта (POST).
-     */
+    /** Форма регистрации (GET) и создание аккаунта (POST). */
     public function register(): void
     {
         if (!$this->isPost()) {
@@ -76,9 +71,9 @@ final class AuthController extends Controller
             'username' => $this->post('username'),
             'email'    => $this->post('email'),
         ];
-        $password         = (string)($_POST['password'] ?? '');
-        $passwordConfirm  = (string)($_POST['password_confirm'] ?? '');
-        $errors           = [];
+        $password        = (string)($_POST['password'] ?? '');
+        $passwordConfirm = (string)($_POST['password_confirm'] ?? '');
+        $errors          = [];
 
         // Имя: 3–30 символов, латиница/цифры/подчёркивание.
         if ($data['username'] === '') {
@@ -121,9 +116,7 @@ final class AuthController extends Controller
         $this->redirect('login');
     }
 
-    /**
-     * Выход: очистка сессии.
-     */
+    /** Выход: очистка сессии. */
     public function logout(): void
     {
         $_SESSION = [];
@@ -132,7 +125,7 @@ final class AuthController extends Controller
             setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
         }
         session_destroy();
-        header('Location: ' . url('home'));
+        header('Location: ' . url('login'));
         exit;
     }
 }

@@ -1,6 +1,9 @@
-<?php /** Страница 500 «внутренняя ошибка». */ ?>
+{% extends 'layout.twig' %}
+
+{% block content %}
 <section class="panel center">
     <h1>500</h1>
     <p>Что-то пошло не так. Ошибка записана в лог сервера.</p>
-    <p><a class="btn" href="<?= url('home') ?>">На главную</a></p>
+    <p><a class="btn" href="{{ url('home') }}">На главную</a></p>
 </section>
+{% endblock %}

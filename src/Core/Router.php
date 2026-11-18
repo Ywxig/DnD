@@ -19,7 +19,7 @@ final class Router
     /**
      * Регистрирует маршрут.
      *
-     * @param string $route      Имя маршрута, например "characters_search"
+     * @param string $route      Имя маршрута, например "characters_create"
      * @param string $controller Класс контроллера
      * @param string $method     Имя метода контроллера
      */

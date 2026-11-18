@@ -17,17 +17,8 @@ abstract class Controller
      */
     protected function render(string $view, array $data = []): void
     {
-        extract($data, EXTR_SKIP);
-
-        ob_start();
-        require VIEWS_PATH . '/' . $view . '.php';
-        $content = ob_get_clean();
-
-        $flashes     = get_flashes();
-        $currentUser = current_user();
-        $appName     = app_config()['app']['name'];
-
-        require VIEWS_PATH . '/layout.php';
+        // Вид сам наследует views/layout.twig через {% extends %}.
+        echo twig()->render($view . '.twig', $data);
     }
 
     /**
@@ -46,12 +37,6 @@ abstract class Controller
     protected function requireLogin(): void
     {
         require_login();
-    }
-
-    /** Доступ только для администраторов. */
-    protected function requireAdmin(): void
-    {
-        require_admin();
     }
 
     /** true, если текущий запрос — POST. */

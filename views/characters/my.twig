@@ -1,0 +1,38 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-head">
+        <h1>Мои персонажи</h1>
+        <a class="btn" href="{{ url('characters_create') }}">+ Создать персонажа</a>
+    </div>
+
+    {% if characters is empty %}
+        <p class="muted">У вас пока нет персонажей. <a href="{{ url('characters_create') }}">Создайте первого героя</a>!</p>
+    {% else %}
+        <table>
+            <thead>
+            <tr>
+                <th>Имя</th><th>Раса</th><th>Класс</th><th>Уровень</th>
+                <th>Мировоззрение</th><th>Создан</th><th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for character in characters %}
+                <tr>
+                    <td><a href="{{ url('character_view', {id: character.id}) }}">{{ character.name }}</a></td>
+                    <td>{{ character.race_name }}</td>
+                    <td>{{ character.class_name }}</td>
+                    <td>{{ character.level }}</td>
+                    <td>{{ character.alignment }}</td>
+                    <td>{{ format_date(character.created_at) }}</td>
+                    <td class="actions">
+                        <a href="{{ url('character_view', {id: character.id}) }}">Посмотреть</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
+{% endblock %}

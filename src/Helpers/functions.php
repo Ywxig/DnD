@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 /**
  * Глобальные хелперы: экранирование вывода, ссылки, flash-сообщения,
- * CSRF-токены, доступ к текущему пользователю.
+ * CSRF-токены, доступ к текущему пользователю, Twig.
  */
+
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 /**
  * Экранирование строки для безопасного вывода в HTML.
@@ -24,18 +28,6 @@ function e(mixed $value): string
 function url(string $route, array $params = []): string
 {
     return 'index.php?' . http_build_query(array_merge(['r' => $route], $params));
-}
-
-/**
- * Абсолютный URL маршрута (для ссылок в «письмах» восстановления пароля).
- *
- * @param array<string, mixed> $params
- */
-function absolute_url(string $route, array $params = []): string
-{
-    $scheme = (($_SERVER['HTTPS'] ?? '') === 'on') ? 'https' : 'http';
-    $host   = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
-    return $scheme . '://' . $host . '/' . url($route, $params);
 }
 
 /* ------------------------------- Flash ---------------------------------- */
@@ -121,20 +113,17 @@ function current_user(): ?array
         $user = $id !== null ? \App\Models\User::find((int)$id) : null;
         // Если пользователь из сессии удалён из БД — сбрасываем сессию.
         if ($user === null && $id !== null) {
-            unset($_SESSION['user_id'], $_SESSION['role']);
+            unset($_SESSION['user_id']);
         }
     }
     return $user;
 }
 
-/** true, если текущий пользователь — администратор. */
-function is_admin(): bool
-{
-    $user = current_user();
-    return $user !== null && ($user['role'] ?? '') === 'admin';
-}
+/* -------------------------------- Прочее -------------------------------- */
 
-/** Доступ только для авторизованных; иначе редирект на вход. */
+/**
+ * Доступ только для авторизованных; иначе редирект на вход.
+ */
 function require_login(): void
 {
     if (current_user() === null) {
@@ -143,20 +132,6 @@ function require_login(): void
         exit;
     }
 }
-
-/** Доступ только для администраторов; иначе 403 / редирект. */
-function require_admin(): void
-{
-    require_login();
-    if (!is_admin()) {
-        http_response_code(403);
-        flash('error', 'Доступ запрещён: требуются права администратора.');
-        header('Location: ' . url('home'));
-        exit;
-    }
-}
-
-/* -------------------------------- Прочее -------------------------------- */
 
 /**
  * Форматирует дату из БД для вывода.
@@ -212,4 +187,60 @@ function signed_modifier(int $score): string
 {
     $mod = stat_modifier($score);
     return ($mod > 0 ? '+' : '') . $mod;
+}
+
+/* --------------------------------- Twig --------------------------------- */
+
+/**
+ * Единый экземпляр Twig: шаблоны из views/, общие переменные и хелперы.
+ */
+function twig(): Environment
+{
+    static $twig = null;
+    if ($twig !== null) {
+        return $twig;
+    }
+    if (!class_exists(Environment::class)) {
+        throw new RuntimeException('Twig не установлен. Выполните: composer install');
+    }
+
+    $twig = new Environment(new FilesystemLoader(VIEWS_PATH), [
+        'cache'            => false,
+        'debug'            => (bool)app_config()['app']['debug'],
+        'autoescape'       => 'html',
+        'strict_variables' => false,
+    ]);
+
+    // Общие переменные всех шаблонов.
+    $twig->addGlobal('app_name', app_config()['app']['name']);
+    $twig->addGlobal('current_user', current_user());
+    $twig->addGlobal('flashes', get_flashes());
+    $twig->addGlobal('stats', \App\Models\Character::STATS);
+    $twig->addGlobal('stat_labels', \App\Models\Character::STAT_LABELS);
+    $twig->addGlobal('alignments', \App\Validators\CharacterValidator::ALIGNMENTS);
+
+    // Хелперы из этого файла, доступные шаблонам.
+    $twig->addFunction(new TwigFunction('url', 'url'));
+    $twig->addFunction(new TwigFunction('format_date', 'format_date'));
+    $twig->addFunction(new TwigFunction('signed_modifier', 'signed_modifier'));
+    $twig->addFunction(new TwigFunction('selected_option', 'selected_option', ['is_safe' => ['html']]));
+    $twig->addFunction(new TwigFunction('error_class', 'error_class'));
+    $twig->addFunction(new TwigFunction('field_error', 'field_error', ['is_safe' => ['html']]));
+    $twig->addFunction(new TwigFunction('csrf_field', 'csrf_field', ['is_safe' => ['html']]));
+
+    return $twig;
+}
+
+/* --------------------------- Совместимость Twig ------------------------- */
+
+/**
+ * Twig опционально использует trigger_deprecation() из symfony/deprecation-contracts.
+ * Пакет Symfony в проекте не установлен, поэтому даём минимальную замену.
+ */
+if (!function_exists('trigger_deprecation')) {
+    function trigger_deprecation(string $package, string $version, string $message, mixed ...$args): void
+    {
+        $message = $args === [] ? $message : vsprintf($message, $args);
+        @trigger_error(sprintf('%s (%s %s)', $message, $package, $version), E_USER_DEPRECATED);
+    }
 }
