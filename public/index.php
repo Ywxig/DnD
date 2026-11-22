@@ -25,6 +25,7 @@ require dirname(__DIR__) . '/src/bootstrap.php';
 
 use App\Controllers\AuthController;
 use App\Controllers\CharacterController;
+use App\Controllers\GameController;
 use App\Core\Router;
 
 $router = new Router();
@@ -41,5 +42,8 @@ $router->add('logout', AuthController::class, 'logout');
 $router->add('characters_my', CharacterController::class, 'my');
 $router->add('characters_create', CharacterController::class, 'create');
 $router->add('character_view', CharacterController::class, 'view');
+
+// игры
+$router->add('games_create', GameController::class, 'create');
 
 $router->run();
