@@ -23,7 +23,7 @@ final class CharacterController extends Controller
         $this->requireLogin();
         $this->render('characters/my', [
             'characters' => Character::ownedBy((int)$_SESSION['user_id']),
-            'title'      => 'Мои персонажи',
+            'title' => 'Мои персонажи',
         ]);
     }
 
@@ -36,12 +36,12 @@ final class CharacterController extends Controller
 
         if (!$this->isPost()) {
             $this->render('characters/create', [
-                'data'    => [],
-                'errors'  => [],
-                'races'   => $races,
+                'data' => [],
+                'errors' => [],
+                'races' => $races,
                 'classes' => $classes,
-                'action'  => url('characters_create'),
-                'title'   => 'Создание персонажа',
+                'action' => url('characters_create'),
+                'title' => 'Создание персонажа',
             ]);
             return;
         }

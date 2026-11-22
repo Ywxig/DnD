@@ -1,50 +1,48 @@
--- ============================================================
 -- Схема базы данных приложения «Персонажи D&D»
 -- СУБД: PostgreSQL
--- ============================================================
 
 DROP TABLE IF EXISTS characters, races, classes, users CASCADE;
 
 -- Пользователи: уникальные username и email
 CREATE TABLE users (
-    id            BIGSERIAL    PRIMARY KEY,
-    username      VARCHAR(50)  NOT NULL UNIQUE,
-    email         VARCHAR(255) NOT NULL UNIQUE,
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    created_at    TIMESTAMPTZ  NOT NULL DEFAULT now()
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 
 -- Справочник рас
 CREATE TABLE races (
-    id          SERIAL      PRIMARY KEY,
-    name        VARCHAR(50) NOT NULL UNIQUE,
+    id SERIAL      PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
     description TEXT        NOT NULL DEFAULT ''
 );
 
 -- Справочник классов
 CREATE TABLE classes (
-    id          SERIAL      PRIMARY KEY,
-    name        VARCHAR(50) NOT NULL UNIQUE,
+    id SERIAL      PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
     description TEXT        NOT NULL DEFAULT ''
 );
 
 -- Персонажи: внешние ключи на пользователя, расу и класс
 CREATE TABLE characters (
-    id            BIGSERIAL   PRIMARY KEY,
-    user_id       BIGINT      NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    race_id       INTEGER     NOT NULL REFERENCES races(id),
-    class_id      INTEGER     NOT NULL REFERENCES classes(id),
-    name          VARCHAR(50) NOT NULL,
-    level         INTEGER     NOT NULL CHECK (level BETWEEN 1 AND 20),
-    strength      INTEGER     NOT NULL CHECK (strength BETWEEN 3 AND 18),
-    dexterity     INTEGER     NOT NULL CHECK (dexterity BETWEEN 3 AND 18),
-    constitution  INTEGER     NOT NULL CHECK (constitution BETWEEN 3 AND 18),
-    intelligence  INTEGER     NOT NULL CHECK (intelligence BETWEEN 3 AND 18),
-    wisdom        INTEGER     NOT NULL CHECK (wisdom BETWEEN 3 AND 18),
-    charisma      INTEGER     NOT NULL CHECK (charisma BETWEEN 3 AND 18),
-    alignment     VARCHAR(50) NOT NULL,
-    backstory     TEXT        NOT NULL DEFAULT '',
-    created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    race_id INTEGER NOT NULL REFERENCES races(id),
+    class_id INTEGER NOT NULL REFERENCES classes(id),
+    name VARCHAR(50) NOT NULL,
+    level INTEGER NOT NULL CHECK (level BETWEEN 1 AND 20),
+    strength INTEGER NOT NULL CHECK (strength BETWEEN 3 AND 18),
+    dexterity INTEGER NOT NULL CHECK (dexterity BETWEEN 3 AND 18),
+    constitution INTEGER NOT NULL CHECK (constitution BETWEEN 3 AND 18),
+    intelligence INTEGER NOT NULL CHECK (intelligence BETWEEN 3 AND 18),
+    wisdom INTEGER NOT NULL CHECK (wisdom BETWEEN 3 AND 18),
+    charisma INTEGER NOT NULL CHECK (charisma BETWEEN 3 AND 18),
+    alignment VARCHAR(50) NOT NULL,
+    backstory TEXT NOT NULL DEFAULT '',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- Индекс по владельцу: выборка «мои персонажи»
