@@ -1,0 +1,11 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<section class="panel form-panel">
+    <div class="panel-head">
+        <h1>Новый пост</h1>
+        <a class="btn btn-secondary" href="{{ url('posts') }}">← К постам</a>
+    </div>
+    {% include 'posts/_form.twig' %}
+</section>
+{% endblock %}

@@ -1,7 +1,7 @@
 -- Схема базы данных приложения «Персонажи D&D»
 -- СУБД: PostgreSQL
 
-DROP TABLE IF EXISTS characters, races, classes, users CASCADE;
+DROP TABLE IF EXISTS posts, characters, races, classes, users CASCADE;
 
 -- Пользователи: уникальные username и email
 CREATE TABLE users (
@@ -47,3 +47,18 @@ CREATE TABLE characters (
 
 -- Индекс по владельцу: выборка «мои персонажи»
 CREATE INDEX idx_characters_user_id ON characters(user_id);
+
+-- Посты: объявления об играх (ваншот или кампания)
+CREATE TABLE posts (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(100) NOT NULL,
+    format VARCHAR(20) NOT NULL CHECK (format IN ('oneshot', 'campaign')),
+    start_level INTEGER NOT NULL CHECK (start_level BETWEEN 1 AND 20),
+    description TEXT NOT NULL DEFAULT '',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Индексы: лента постов и «мои посты»
+CREATE INDEX idx_posts_user_id ON posts(user_id);
+CREATE INDEX idx_posts_created_at ON posts(created_at DESC);

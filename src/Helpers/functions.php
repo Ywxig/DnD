@@ -218,6 +218,7 @@ function twig(): Environment
     $twig->addGlobal('stats', \App\Models\Character::STATS);
     $twig->addGlobal('stat_labels', \App\Models\Character::STAT_LABELS);
     $twig->addGlobal('alignments', \App\Validators\CharacterValidator::ALIGNMENTS);
+    $twig->addGlobal('post_formats', \App\Models\Post::FORMAT_LABELS);
 
     // Хелперы из этого файла, доступные шаблонам.
     $twig->addFunction(new TwigFunction('url', 'url'));

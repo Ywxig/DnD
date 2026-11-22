@@ -25,7 +25,7 @@ require dirname(__DIR__) . '/src/bootstrap.php';
 
 use App\Controllers\AuthController;
 use App\Controllers\CharacterController;
-use App\Controllers\GameController;
+use App\Controllers\PostController;
 use App\Core\Router;
 
 $router = new Router();
@@ -44,7 +44,10 @@ $router->add('characters_create', CharacterController::class, 'create');
 $router->add('characters_find', CharacterController::class, 'find');
 $router->add('character_view', CharacterController::class, 'view');
 
-// игры
-$router->add('games_create', GameController::class, 'create');
+// Посты-объявления об играх.
+$router->add('posts', PostController::class, 'index');
+$router->add('posts_my', PostController::class, 'my');
+$router->add('posts_create', PostController::class, 'create');
+$router->add('post_view', PostController::class, 'view');
 
 $router->run();

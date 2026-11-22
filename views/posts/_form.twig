@@ -1,0 +1,45 @@
+{# Общая форма поста: создание и редактирование. #}
+<form id="post-form"
+      method="post"
+      action="{{ action|default(url('posts_create')) }}">
+
+    {{ csrf_field() }}
+
+    <div class="form-row">
+        <label for="title">Название *</label>
+        <input id="title" type="text" name="title" value="{{ data.title|default('') }}"
+               maxlength="100" placeholder="Например: Поход в подземелье"
+               class="{{ error_class(errors, 'title') }}">
+        {{ field_error(errors, 'title') }}
+    </div>
+
+    <div class="form-grid">
+        <div class="form-row">
+            <label for="format">Формат *</label>
+            <select id="format" name="format" class="{{ error_class(errors, 'format') }}">
+                {% for value, label in post_formats %}
+                    <option value="{{ value }}"{{ selected_option(data.format|default('oneshot'), value) }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            {{ field_error(errors, 'format') }}
+        </div>
+
+        <div class="form-row">
+            <label for="start_level">Стартовый уровень (1–20) *</label>
+            <input id="start_level" type="number" name="start_level"
+                   min="1" max="20" value="{{ data.start_level|default(1) }}"
+                   class="{{ error_class(errors, 'start_level') }}">
+            {{ field_error(errors, 'start_level') }}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="description">Описание и завязка</label>
+        <textarea id="description" name="description" rows="6" maxlength="2000"
+                  placeholder="Краткое описание приключения, правила, требования к игрокам..."
+                  class="{{ error_class(errors, 'description') }}">{{ data.description|default('') }}</textarea>
+        {{ field_error(errors, 'description') }}
+    </div>
+
+    <button type="submit" class="btn">{{ submit_label|default('Создать пост') }}</button>
+</form>

@@ -11,8 +11,8 @@
     <nav class="nav">
         <a class="brand" href="{{ url('home') }}">⚔ {{ app_name }}</a>
         {% if current_user %}
-            <a href="{{ url('characters_my') }}">Мои персонажи</a>
             <a href="{{ url('characters_find') }}">Поиск</a>
+            <a href="{{ url('posts') }}">Посты</a>
             <a href="{{ url('characters_create') }}">+ Персонаж</a>
             <span class="spacer"></span>
             <span class="user-badge">{{ current_user.username }}</span>

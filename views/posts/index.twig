@@ -1,0 +1,39 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-head">
+        <h1>{{ title }}</h1>
+        <a class="btn" href="{{ url('posts_create') }}">+ Создать пост</a>
+    </div>
+
+    {% if posts is empty %}
+        <p class="muted">Пока нет постов.</p>
+    {% else %}
+        <table>
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th class="hide-mobile">Формат</th>
+                <th>Уровень</th>
+                <th class="hide-mobile">Автор</th>
+                <th class="hide-mobile">Создан</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td class="hide-mobile">{{ post_formats[post.format]|default(post.format) }}</td>
+                    <td>{{ post.start_level }}</td>
+                    <td class="hide-mobile">{{ post.owner_name }}</td>
+                    <td class="hide-mobile">{{ format_date(post.created_at) }}</td>
+                    <td><a href="{{ url('post_view', {id: post.id}) }}">Посмотреть</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
+{% endblock %}

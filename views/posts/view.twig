@@ -1,0 +1,22 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-head">
+        <h1>{{ post.title }}</h1>
+        <a class="btn btn-secondary" href="{{ url('posts') }}">← К постам</a>
+    </div>
+
+    <dl class="character-meta">
+        <div><dt>Формат</dt><dd>{{ post_formats[post.format]|default(post.format) }}</dd></div>
+        <div><dt>Стартовый уровень</dt><dd>{{ post.start_level }}</dd></div>
+        <div><dt>Автор</dt><dd>{{ post.owner_name }}</dd></div>
+        <div><dt>Создан</dt><dd>{{ format_date(post.created_at) }}</dd></div>
+    </dl>
+
+    {% if post.description %}
+        <h2>Описание</h2>
+        <p>{{ post.description|nl2br }}</p>
+    {% endif %}
+</section>
+{% endblock %}
