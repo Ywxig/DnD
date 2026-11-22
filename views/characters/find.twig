@@ -1,0 +1,55 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-head">
+        <h1>Поиск персонажей</h1>
+        <a class="btn btn-secondary" href="{{ url('characters_my') }}">← Мои персонажи</a>
+    </div>
+
+    <form class="search-form" method="get" action="{{ url('characters_find') }}">
+        <input type="hidden" name="r" value="characters_find">
+        <div class="inline-search">
+            <input type="search" name="q" value="{{ query }}"
+                   placeholder="Имя, раса, класс, мировоззрение или игрок" autofocus>
+            <button type="submit" class="btn">Найти</button>
+        </div>
+    </form>
+
+    <p class="muted">
+        {% if query is empty %}
+            Показаны все персонажи в базе: {{ characters|length }}.
+        {% else %}
+            По запросу «{{ query }}» найдено: {{ characters|length }}.
+        {% endif %}
+    </p>
+
+    {% if characters is empty %}
+        <p class="muted">Ничего не найдено. Попробуйте изменить запрос.</p>
+    {% else %}
+        <table>
+            <thead>
+            <tr>
+                <th>Имя</th><th>Раса</th><th>Класс</th><th>Уровень</th>
+                <th>Мировоззрение</th><th>Игрок</th><th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for character in characters %}
+                <tr>
+                    <td><a href="{{ url('character_view', {id: character.id}) }}">{{ character.name }}</a></td>
+                    <td>{{ character.race_name }}</td>
+                    <td>{{ character.class_name }}</td>
+                    <td>{{ character.level }}</td>
+                    <td>{{ character.alignment }}</td>
+                    <td>{{ character.owner_name }}</td>
+                    <td class="actions">
+                        <a href="{{ url('character_view', {id: character.id}) }}">Посмотреть</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
+{% endblock %}

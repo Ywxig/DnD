@@ -53,12 +53,12 @@ final class CharacterController extends Controller
         if ($errors !== []) {
             flash('error', 'Проверьте форму — есть ошибки.');
             $this->render('characters/create', [
-                'data'    => $data,
-                'errors'  => $errors,
-                'races'   => $races,
+                'data' => $data,
+                'errors' => $errors,
+                'races' => $races,
                 'classes' => $classes,
-                'action'  => url('characters_create'),
-                'title'   => 'Создание персонажа',
+                'action' => url('characters_create'),
+                'title' => 'Создание персонажа',
             ]);
             return;
         }
@@ -70,13 +70,13 @@ final class CharacterController extends Controller
         $this->redirect('character_view', ['id' => $id]);
     }
 
-    /** Карточка своего персонажа. Чужие персонажи недоступны. */
+    /** Карточка персонажа. */
     public function view(): void
     {
         $this->requireLogin();
 
         $character = Character::findDetailed((int)($_GET['id'] ?? 0));
-        if ($character === null || (int)$character['user_id'] !== (int)$_SESSION['user_id']) {
+        if ($character === null) {
             http_response_code(404);
             $this->render('errors/404');
             return;
@@ -107,5 +107,20 @@ final class CharacterController extends Controller
             $data[$stat] = (($_POST[$stat] ?? '') !== '') ? (int)$_POST[$stat] : null;
         }
         return $data;
+    }
+
+    /** Поиск персонажей по базе данных. */
+    public function find(): void
+    {
+        $this->requireLogin();
+
+        $query = $this->get('q');
+        $characters = Character::search($query);
+
+        $this->render('characters/find', [
+            'query'      => $query,
+            'characters' => $characters,
+            'title'      => 'Поиск персонажей',
+        ]);
     }
 }

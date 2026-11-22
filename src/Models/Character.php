@@ -85,4 +85,40 @@ final class Character extends Model
             ['user_id' => $userId]
         )->fetchAll();
     }
+
+    /**
+     * Поиск персонажей по всей базе: имя, раса, класс, мировоззрение, игрок.
+     * Пустой запрос возвращает всех персонажей.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public static function search(string $query = ''): array
+    {
+        $sql = 'SELECT c.*, r.name AS race_name, cl.name AS class_name, u.username AS owner_name
+                FROM characters c
+                JOIN races r    ON r.id  = c.race_id
+                JOIN classes cl ON cl.id = c.class_id
+                JOIN users u    ON u.id  = c.user_id';
+
+        if ($query === '') {
+            return Database::query($sql . ' ORDER BY c.id DESC')->fetchAll();
+        }
+
+        $sql .= ' WHERE c.name ILIKE :name
+                     OR r.name ILIKE :race
+                     OR cl.name ILIKE :class
+                     OR c.alignment ILIKE :alignment
+                     OR u.username ILIKE :owner
+                  ORDER BY c.id DESC';
+
+        $like = '%' . $query . '%';
+
+        return Database::query($sql, [
+            'name'      => $like,
+            'race'      => $like,
+            'class'     => $like,
+            'alignment' => $like,
+            'owner'     => $like,
+        ])->fetchAll();
+    }
 }

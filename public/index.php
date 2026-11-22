@@ -41,6 +41,7 @@ $router->add('logout', AuthController::class, 'logout');
 // Персонажи пользователя.
 $router->add('characters_my', CharacterController::class, 'my');
 $router->add('characters_create', CharacterController::class, 'create');
+$router->add('characters_find', CharacterController::class, 'find');
 $router->add('character_view', CharacterController::class, 'view');
 
 // игры
