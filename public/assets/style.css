@@ -91,6 +91,23 @@ th { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size
 tbody tr:hover { background: rgba(255, 255, 255, .03); }
 td.actions { white-space: nowrap; }
 
+/* Для мобилок) */
+@media (max-width: 640px) {
+  table { font-size: 13px; }
+  th, td { padding: 6px 6px; }
+
+  .hide-mobile { display: none; }
+
+  /* прячем текст, показываем иконку */
+  .view-character { font-size: 0; }
+  .view-character::before {
+    content: "👁";
+    font-size: 16px;
+  }
+}
+
+
+
 /* Формы */
 .form-panel { max-width: 720px; margin: 0 auto; }
 .form-row { margin-bottom: 14px; }

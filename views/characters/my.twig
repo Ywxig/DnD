@@ -14,7 +14,8 @@
             <thead>
             <tr>
                 <th>Имя</th><th>Раса</th><th>Класс</th><th>Уровень</th>
-                <th>Мировоззрение</th><th>Создан</th><th></th>
+                <th class="hide-mobile">Мировоззрение</th>
+                <th class="hide-mobile">Создан</th><th></th>
             </tr>
             </thead>
             <tbody>
@@ -24,10 +25,11 @@
                     <td>{{ character.race_name }}</td>
                     <td>{{ character.class_name }}</td>
                     <td>{{ character.level }}</td>
-                    <td>{{ character.alignment }}</td>
-                    <td>{{ format_date(character.created_at) }}</td>
+                    <td class="hide-mobile">{{ character.alignment }}</td>
+                    <td class="hide-mobile">{{ format_date(character.created_at) }}</td>
                     <td class="actions">
-                        <a href="{{ url('character_view', {id: character.id}) }}">Посмотреть</a>
+                        <a class="view-character" href="{{ url('character_view', {id: character.id}) }}"
+                           title="Посмотреть" aria-label="Посмотреть">Посмотреть</a>
                     </td>
                 </tr>
             {% endfor %}
