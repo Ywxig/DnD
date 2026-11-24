@@ -69,6 +69,47 @@ final class Character extends Model
     }
 
     /**
+     * Обновляет редактируемые поля персонажа.
+     *
+     * @param array<string, mixed> $data
+     */
+    public static function update(int $id, array $data): bool
+    {
+        Database::query(
+            'UPDATE characters SET
+                race_id = :race_id,
+                class_id = :class_id,
+                name = :name,
+                level = :level,
+                strength = :strength,
+                dexterity = :dexterity,
+                constitution = :constitution,
+                intelligence = :intelligence,
+                wisdom = :wisdom,
+                charisma = :charisma,
+                alignment = :alignment,
+                backstory = :backstory
+             WHERE id = :id',
+            [
+                'id'           => $id,
+                'race_id'      => $data['race_id'],
+                'class_id'     => $data['class_id'],
+                'name'         => $data['name'],
+                'level'        => $data['level'],
+                'strength'     => $data['strength'],
+                'dexterity'    => $data['dexterity'],
+                'constitution' => $data['constitution'],
+                'intelligence' => $data['intelligence'],
+                'wisdom'       => $data['wisdom'],
+                'charisma'     => $data['charisma'],
+                'alignment'    => $data['alignment'],
+                'backstory'    => $data['backstory'],
+            ]
+        );
+        return true;
+    }
+
+    /**
      * Персонажи конкретного пользователя («Мои персонажи»).
      *
      * @return list<array<string, mixed>>

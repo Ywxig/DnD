@@ -4,7 +4,18 @@
 <section class="panel character-card">
     <div class="panel-head">
         <h1>{{ character.name }}</h1>
-        <a class="btn btn-secondary" href="{{ url('characters_my') }}">← Мои персонажи</a>
+        <div class="actions">
+            {% if character.user_id == current_user.id %}
+                <a class="btn btn-secondary" href="{{ url('character_edit', {id: character.id}) }}">Изменить</a>
+                <form class="inline" method="post" action="{{ url('character_delete') }}"
+                      onsubmit="return confirm('Удалить персонажа «{{ character.name|e('js') }}»? Это действие необратимо.');">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="id" value="{{ character.id }}">
+                    <button type="submit" class="link-danger">Удалить</button>
+                </form>
+            {% endif %}
+            <a class="btn btn-secondary" href="{{ url('characters_my') }}">← Мои персонажи</a>
+        </div>
     </div>
 
     <dl class="character-meta">

@@ -88,6 +88,91 @@ final class CharacterController extends Controller
         ]);
     }
 
+    /** Форма редактирования (GET) и сохранение изменений (POST). */
+    public function edit(): void
+    {
+        $this->requireLogin();
+
+        $id = (int)($this->isPost() ? ($_POST['id'] ?? 0) : ($_GET['id'] ?? 0));
+        $character = $this->findOwnedCharacter($id);
+        if ($character === null) {
+            return;
+        }
+
+        $races   = Race::all('name');
+        $classes = CharClass::all('name');
+
+        if (!$this->isPost()) {
+            $this->render('characters/edit', [
+                'data'    => $character,
+                'errors'  => [],
+                'races'   => $races,
+                'classes' => $classes,
+                'action'  => url('character_edit'),
+                'title'   => 'Редактирование персонажа',
+            ]);
+            return;
+        }
+
+        assert_csrf();
+        $data   = $this->collectInput();
+        $errors = CharacterValidator::validate($data, $races, $classes);
+
+        if ($errors !== []) {
+            flash('error', 'Проверьте форму — есть ошибки.');
+            $this->render('characters/edit', [
+                'data'    => array_merge($character, $data),
+                'errors'  => $errors,
+                'races'   => $races,
+                'classes' => $classes,
+                'action'  => url('character_edit'),
+                'title'   => 'Редактирование персонажа',
+            ]);
+            return;
+        }
+
+        Character::update($id, $data);
+        flash('success', 'Персонаж «' . $data['name'] . '» обновлён.');
+        $this->redirect('character_view', ['id' => $id]);
+    }
+
+    /** Удаление персонажа владельцем (только POST + CSRF). */
+    public function delete(): void
+    {
+        $this->requireLogin();
+
+        if (!$this->isPost()) {
+            $this->redirect('characters_my');
+        }
+
+        assert_csrf();
+
+        $character = $this->findOwnedCharacter((int)($_POST['id'] ?? 0));
+        if ($character === null) {
+            return;
+        }
+
+        Character::delete((int)$character['id']);
+        flash('success', 'Персонаж «' . $character['name'] . '» удалён.');
+        $this->redirect('characters_my');
+    }
+
+    /**
+     * Находит персонажа по id и проверяет, что он принадлежит текущему игроку.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function findOwnedCharacter(int $id): ?array
+    {
+        $character = Character::findDetailed($id);
+        if ($character === null || (int)$character['user_id'] !== (int)$_SESSION['user_id']) {
+            http_response_code(404);
+            $this->render('errors/404');
+            return null;
+        }
+        return $character;
+    }
+
     /**
      * Собирает значения полей формы из POST.
      *

@@ -2,10 +2,10 @@
 -- Выполнять после database/schema.sql
 -- Пароль тестовых пользователей: password123
 
--- Два тестовых игрока
-INSERT INTO users (username, email, password_hash) VALUES
-('aragorn', 'aragorn@example.com', '$2y$12$sD9lhLRF/cHkACcqPz5ijevIGKSQp4bk4GDWCxVrB3woBQ5ofmOO.'),
-('gimli',   'gimli@example.com',   '$2y$12$sD9lhLRF/cHkACcqPz5ijevIGKSQp4bk4GDWCxVrB3woBQ5ofmOO.');
+-- Два тестовых игрока (aragorn — администратор)
+INSERT INTO users (username, email, password_hash, is_admin) VALUES
+('aragorn', 'aragorn@example.com', '$2y$12$sD9lhLRF/cHkACcqPz5ijevIGKSQp4bk4GDWCxVrB3woBQ5ofmOO.', TRUE),
+('gimli',   'gimli@example.com',   '$2y$12$sD9lhLRF/cHkACcqPz5ijevIGKSQp4bk4GDWCxVrB3woBQ5ofmOO.', FALSE);
 
 -- Расы (7)
 INSERT INTO races (name, description) VALUES

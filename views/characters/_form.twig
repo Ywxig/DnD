@@ -5,6 +5,9 @@
       data-alignments="{{ alignments|join('|') }}">
 
     {{ csrf_field() }}
+    {% if data.id is defined and data.id %}
+        <input type="hidden" name="id" value="{{ data.id }}">
+    {% endif %}
 
     <div class="form-row">
         <label for="name">Имя персонажа *</label>

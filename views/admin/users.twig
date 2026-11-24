@@ -1,0 +1,60 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-head">
+        <h1>Пользователи</h1>
+        <a class="btn" href="{{ url('admin_user_create') }}">+ Добавить пользователя</a>
+    </div>
+
+    {% if users is empty %}
+        <p class="muted">Пользователей пока нет.</p>
+    {% else %}
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя</th>
+                <th class="hide-mobile">Email</th>
+                <th>Роль</th>
+                <th>Персонажи</th>
+                <th class="hide-mobile">Посты</th>
+                <th class="hide-mobile">Регистрация</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td class="hide-mobile">{{ user.email }}</td>
+                    <td>
+                        {% if user.is_admin %}
+                            <span class="badge badge-admin">Админ</span>
+                        {% else %}
+                            <span class="badge">Игрок</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.characters_count }}</td>
+                    <td class="hide-mobile">{{ user.posts_count }}</td>
+                    <td class="hide-mobile">{{ format_date(user.created_at) }}</td>
+                    <td class="actions">
+                        {% if user.id == current_user.id %}
+                            <span class="muted">это вы</span>
+                        {% else %}
+                            <form class="inline" method="post" action="{{ url('admin_user_delete') }}"
+                                  onsubmit="return confirm('Удалить пользователя «{{ user.username|e('js') }}» вместе с его персонажами и постами?');">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="id" value="{{ user.id }}">
+                                <button type="submit" class="link-danger">Удалить</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
+{% endblock %}

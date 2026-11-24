@@ -1,0 +1,9 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<section class="panel form-panel">
+    <h1>Редактирование персонажа</h1>
+    {% include 'characters/_form.twig' %}
+    <p class="muted"><a href="{{ url('character_view', {id: data.id}) }}">← Вернуться к персонажу</a></p>
+</section>
+{% endblock %}

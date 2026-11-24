@@ -23,6 +23,7 @@ spl_autoload_register(static function (string $class): void {
 
 require dirname(__DIR__) . '/src/bootstrap.php';
 
+use App\Controllers\AdminController;
 use App\Controllers\AuthController;
 use App\Controllers\CharacterController;
 use App\Controllers\PostController;
@@ -43,11 +44,18 @@ $router->add('characters_my', CharacterController::class, 'my');
 $router->add('characters_create', CharacterController::class, 'create');
 $router->add('characters_find', CharacterController::class, 'find');
 $router->add('character_view', CharacterController::class, 'view');
+$router->add('character_edit', CharacterController::class, 'edit');
+$router->add('character_delete', CharacterController::class, 'delete');
 
 // Посты-объявления об играх.
 $router->add('posts', PostController::class, 'index');
 $router->add('posts_my', PostController::class, 'my');
 $router->add('posts_create', PostController::class, 'create');
 $router->add('post_view', PostController::class, 'view');
+
+// Админка (только для администраторов).
+$router->add('admin_users', AdminController::class, 'users');
+$router->add('admin_user_create', AdminController::class, 'userCreate');
+$router->add('admin_user_delete', AdminController::class, 'userDelete');
 
 $router->run();

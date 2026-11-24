@@ -134,6 +134,27 @@ function require_login(): void
 }
 
 /**
+ * Является ли текущий пользователь администратором.
+ */
+function current_user_is_admin(): bool
+{
+    return (bool)(current_user()['is_admin'] ?? false);
+}
+
+/**
+ * Доступ только для администраторов; иначе редирект на главную.
+ */
+function require_admin(): void
+{
+    require_login();
+    if (!current_user_is_admin()) {
+        flash('error', 'Доступ запрещён: нужны права администратора.');
+        header('Location: ' . url('home'));
+        exit;
+    }
+}
+
+/**
  * Форматирует дату из БД для вывода.
  */
 function format_date(mixed $timestamp): string

@@ -65,6 +65,7 @@ h2 { font-size: 18px; color: var(--accent); margin: 16px 0 10px; }
 }
 .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
 .panel-head h1, .panel-head h2 { margin: 0; }
+.panel-head .actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 .hero { text-align: center; padding: 20px 0 8px; }
 .hero h1 { font-size: 30px; color: var(--accent); }
@@ -127,6 +128,8 @@ td.actions { white-space: nowrap; }
 .form-panel { max-width: 720px; margin: 0 auto; }
 .form-row { margin-bottom: 14px; }
 .form-row label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 14px; }
+.form-row label.checkbox-row { display: flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 0; }
+.form-row label.checkbox-row input { width: auto; }
 .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
 
 input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]),
