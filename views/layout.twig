@@ -13,7 +13,7 @@
         {% if current_user %}
             <a href="{{ url('characters_find') }}">Поиск</a>
             <a href="{{ url('posts') }}">Посты</a>
-            <a href="{{ url('characters_create') }}">+ Персонаж</a>
+            <a class="add" href="{{ url('characters_create') }}">+ Персонаж</a>
             <span class="spacer"></span>
             <span class="user-badge">{{ current_user.username }}</span>
             <a href="{{ url('logout') }}">Выход</a>

@@ -37,10 +37,10 @@ function app_config(): array
                     'debug' => false,
                 ],
                 'db' => [
-                    'host'     => 'localhost',
-                    'port'     => 5432,
-                    'name'     => 'dnd',
-                    'user'     => 'dnd',
+                    'host' => 'localhost',
+                    'port' => 5432,
+                    'name' => 'dnd',
+                    'user' => 'dnd',
                     'password' => 'dnd_pass',
                 ],
             ];
@@ -81,10 +81,10 @@ if (app_config()['app']['debug']) {
 // Сессия: httpOnly-кука, SameSite=Lax.
 session_set_cookie_params([
     'lifetime' => 0,
-    'path'     => '/',
+    'path' => '/',
     'httponly' => true,
     'samesite' => 'Lax',
-    'secure'   => (($_SERVER['HTTPS'] ?? '') === 'on'),
+    'secure' => (($_SERVER['HTTPS'] ?? '') === 'on'),
 ]);
 session_name('dnd_session');
 session_start();
